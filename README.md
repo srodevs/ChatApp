@@ -4,7 +4,7 @@
 
 <p align="center">
 <a>
-<img src="https://firebasestorage.googleapis.com/v0/b/chatapp-c60a2.appspot.com/o/screens_chatapp.jpg?alt=media&token=7391e8f6-52a2-45ec-a26d-43623e090a8f" style="height: 75%; width:75%;" alt=""/>
+<img src="https://firebasestorage.googleapis.com/v0/b/chatapp-c60a2.appspot.com/o/screenChatApp.jpg?alt=media&token=f746367b-f451-4f77-bf57-4387620b8141" style="height: 75%; width:75%;" alt=""/>
 </a>
 </p>
 
