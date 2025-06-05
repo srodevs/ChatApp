@@ -27,19 +27,13 @@ class MainViewModel @Inject constructor(
             val resToken = firebaseMessageService.getFcmDevice()
             if (resToken.isNotEmpty()) {
                 sharedPrefs.setValueLogin(true)
+                val res = authFirebaseService.getCurrentUid().toString()
+                sharedPrefs.setUuid(res)
                 val uuid = authFirebaseService.getCurrentUid()
                 firestore.getInfUser(uuid.toString()).update("fcmToken", resToken)
                 response(resToken)
             }
         }
     }
-
-    fun getUuId() {
-        viewModelScope.launch {
-            val res = authFirebaseService.getCurrentUid().toString()
-            sharedPrefs.setUuid(res)
-        }
-    }
-
 
 }
