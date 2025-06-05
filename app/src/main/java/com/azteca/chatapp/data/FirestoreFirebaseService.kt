@@ -17,40 +17,41 @@ class FirestoreFirebaseService @Inject constructor(
 ) {
 
     companion object {
-        private const val collectUser = "user"
-        private const val collectChatsR = "chatRoom"
-        private const val collectChat = "chatProf"
-        private const val stgUserPro = "userPdof"
-        const val dbUsername = "username"
-        const val dbListUser = "listUser"
-        const val dbTimestamp = "timestamp"
+        private const val COLLECT_USER = "user"
+        private const val COLLECT_CHATS_R = "chatRoom"
+        private const val COLLECT_CHAT = "chatProf"
+        private const val SRG_USER_PRO = "userPdof"
+        const val DB_USERNAME = "username"
+        const val DB_LIST_USER = "listUser"
+        const val DB_TIMESTAMP = "timestamp"
     }
 
     fun collectionUser(): CollectionReference {
-        return firestore.collection(collectUser)
+        return firestore.collection(COLLECT_USER)
     }
 
     fun getInfUser(userId: String): DocumentReference {
-        return firestore.collection(collectUser).document(userId)
+        return firestore.collection(COLLECT_USER).document(userId)
     }
 
     suspend fun setInfUser(userId: String, userModel: UserModel): Boolean {
         return suspendCoroutine { continuation ->
-            firestore.collection(collectUser).document(userId)
+            firestore.collection(COLLECT_USER).document(userId)
                 .set(userModel).addOnCompleteListener {
                     continuation.resume(it.isSuccessful)
                 }.addOnFailureListener {
+                    // modificar las reglas de firestore
                     continuation.resumeWithException(it)
                 }
         }
     }
 
     fun getChatroom(chatRoomId: String): DocumentReference {
-        return firestore.collection(collectChatsR).document(chatRoomId)
+        return firestore.collection(COLLECT_CHATS_R).document(chatRoomId)
     }
 
     fun getChatroomMsg(chatRoomId: String): CollectionReference {
-        return getChatroom(chatRoomId).collection(collectChat)
+        return getChatroom(chatRoomId).collection(COLLECT_CHAT)
     }
 
     fun getChatroomId(userId1: String, userId2: String): String {
@@ -62,7 +63,7 @@ class FirestoreFirebaseService @Inject constructor(
     }
 
     fun getChatroomCollections(): CollectionReference {
-        return firestore.collection(collectChatsR)
+        return firestore.collection(COLLECT_CHATS_R)
     }
 
     fun getOtherUserFromChatRoom(listUsers: List<String>, currentUser: String): DocumentReference {
@@ -74,7 +75,7 @@ class FirestoreFirebaseService @Inject constructor(
     }
 
     fun refImgProfileUser(userId: String): StorageReference {
-        return firebaseStorage.getReference().child(stgUserPro).child(userId)
+        return firebaseStorage.getReference().child(SRG_USER_PRO).child(userId)
     }
 
 }

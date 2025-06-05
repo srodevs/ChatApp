@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.azteca.chatapp.data.AuthFirebaseService
 import com.azteca.chatapp.data.FirestoreFirebaseService
-import com.azteca.chatapp.data.FirestoreFirebaseService.Companion.dbTimestamp
+import com.azteca.chatapp.data.FirestoreFirebaseService.Companion.DB_TIMESTAMP
 import com.azteca.chatapp.data.model.ChatroomModelResponse
 import com.azteca.chatapp.data.model.UserModelResponse
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -24,8 +24,8 @@ class ChatsViewModel @Inject constructor(
             val resUuid = authFirebaseService.getCurrentUid()
             if (resUuid != null) {
                 val query = firestore.getChatroomCollections()
-                    .whereArrayContains(FirestoreFirebaseService.dbListUser, resUuid)
-                    .orderBy(dbTimestamp, Query.Direction.DESCENDING)
+                    .whereArrayContains(FirestoreFirebaseService.DB_LIST_USER, resUuid)
+                    .orderBy(DB_TIMESTAMP, Query.Direction.DESCENDING)
 
                 opt(
                     FirestoreRecyclerOptions

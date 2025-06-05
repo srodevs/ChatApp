@@ -20,8 +20,8 @@ class SearchViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             val query = firestore.collectionUser()
-                .whereGreaterThanOrEqualTo(FirestoreFirebaseService.dbUsername, txtUsername)
-                .whereLessThanOrEqualTo(FirestoreFirebaseService.dbUsername, txtUsername + '\uf8ff')
+                .whereGreaterThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername)
+                .whereLessThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername + '\uf8ff')
 
             response(
                 FirestoreRecyclerOptions.Builder<UserModelResponse>()

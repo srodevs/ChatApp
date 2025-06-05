@@ -107,7 +107,7 @@ class ChatViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             val query = firestore.getChatroomMsg(chatroomId).orderBy(
-                FirestoreFirebaseService.dbTimestamp,
+                FirestoreFirebaseService.DB_TIMESTAMP,
                 Query.Direction.DESCENDING
             )
 

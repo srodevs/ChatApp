@@ -37,7 +37,7 @@
     <string name="profile_btn">Actualizar</string>
     <string name="profile_logout">Cerrar sesión</string>
     <string name="profile_profile">Perfil</string>
-    <string name="profile_data_updated">Datos actulizados</string>
+    <string name="profile_data_updated">Datos actualizados</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

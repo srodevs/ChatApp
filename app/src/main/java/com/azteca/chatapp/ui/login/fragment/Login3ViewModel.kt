@@ -36,7 +36,7 @@ class Login3ViewModel @Inject constructor(
                     Log.d(TAG, " set inf user -> $response")
                     res(response)
                 } catch (_: Exception) {
-                    //res(false)
+                    res(false)
                 }
             }
             _loading.value = false

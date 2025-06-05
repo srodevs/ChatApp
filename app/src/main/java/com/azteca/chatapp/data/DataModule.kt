@@ -15,8 +15,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DataModule {
 
-    /* PROVEEMOS firebase para evitar tantas instancias */
-
     @Singleton
     @Provides
     fun provideFirebaseAuth() = Firebase.auth
