@@ -30,7 +30,7 @@ El proyecto contiene:
 ## Uso
 
 - Clona el repo
-    - ```git clone https://github.com/rodrigomasg/ChatApp```
+    - ```git clone https://github.com/srodevs/ChatApp```
 - Sincroniza 'ChatApp' a un proyecto en 'Firebase Console'
 - Habilita  'Authentication(phone)', 'Cloud Firestore', 'Storage' en la consola de Firebase
 - Asegurate de tener el archivo 'google-services.json' en (Android vista project):
