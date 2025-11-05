@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.azteca.chatapp.R
+import com.azteca.chatapp.common.xLoadImg
 import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.ItemUserBinding
 import com.azteca.chatapp.ui.main.fragment.search.SearchViewModel
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
@@ -49,11 +48,8 @@ class SearchAdapter(
             binding.itemTvNumber.text = model.phone
             itemView.setOnClickListener { itemListener(model) }
 
-            viewModel.getImg(model.userId ?: "") {
-                Glide.with(itemView.context)
-                    .load(it)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(binding.itemIvUser)
+            viewModel.getImg(model.userId.orEmpty()) {
+                binding.itemIvUser.xLoadImg(it)
             }
         }
     }

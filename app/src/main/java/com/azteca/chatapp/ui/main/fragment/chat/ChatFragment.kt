@@ -10,17 +10,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.azteca.chatapp.common.SharedPrefs
+import com.azteca.chatapp.common.xLoadImg
 import com.azteca.chatapp.data.network.model.ChatMsgModel
 import com.azteca.chatapp.data.network.model.ChatroomModel
 import com.azteca.chatapp.data.network.model.ChatroomModelResponse
 import com.azteca.chatapp.databinding.FragmentChatBinding
 import com.azteca.chatapp.ui.adapter.ChatAdapter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
-
-private const val TAG = "chatFragment"
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
@@ -34,6 +31,10 @@ class ChatFragment : Fragment() {
     private var otherUserId: String? = null
     private var otherUsername: String? = null
     private var otherNumber: String? = null
+
+    companion object {
+        private const val TAG = "chatFragment"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +55,20 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initComponents()
+        initListeners()
     }
 
     private fun initComponents() {
-        binding.chatTvUsername.text = otherUsername ?: ""
+        binding.chatTvUsername.text = otherUsername.orEmpty()
         getChatRoomId()
         initAdapter()
+    }
 
-        binding.searchIvBack.setOnClickListener { parentFragmentManager.popBackStack() }
-        binding.searchIvSend.setOnClickListener { sendMsg() }
+    private fun initListeners() {
+        with(binding) {
+            searchIvBack.setOnClickListener { parentFragmentManager.popBackStack() }
+            searchIvSend.setOnClickListener { sendMsg() }
+        }
     }
 
     private fun initAdapter() {
@@ -90,15 +96,12 @@ class ChatFragment : Fragment() {
     private fun getChatRoomId() {
         if (otherUserId != null) {
             viewModel.getChatRoomId(
-                otherUserId!!,
+                otherUserId = otherUserId!!,
                 response = { chat ->
                     chatroomId = chat
                 },
                 responseImg = { url ->
-                    Glide.with(requireContext())
-                        .load(url)
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(binding.searchIvPhoto)
+                    binding.searchIvPhoto.xLoadImg(url)
                 }
             )
 

@@ -8,20 +8,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.azteca.chatapp.R
 import com.azteca.chatapp.common.SharedPrefs
+import com.azteca.chatapp.common.xLoadImg
+import com.azteca.chatapp.common.xToast
 import com.azteca.chatapp.data.network.model.UserModel
 import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.FragmentProfileBinding
 import com.azteca.chatapp.ui.login.LoginActivity
 import com.azteca.chatapp.ui.main.MainActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 
@@ -36,10 +35,7 @@ class ProfileFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 uriImage = it.data?.data
-                Glide.with(requireContext())
-                    .load(uriImage)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(binding.profileIvUser)
+                binding.profileIvUser.xLoadImg(uriImage.toString())
             }
         }
 
@@ -58,11 +54,12 @@ class ProfileFragment : Fragment() {
     }
 
     private fun initComponent() {
-        binding.profileIvBack.setOnClickListener { parentFragmentManager.popBackStack() }
-        binding.updateBtnSend.setOnClickListener { validateData() }
-        binding.profileTvLogout.setOnClickListener { userLogout() }
-        binding.profileIvUser.setOnClickListener { imgeUser() }
-
+        with(binding) {
+            profileIvBack.setOnClickListener { parentFragmentManager.popBackStack() }
+            updateBtnSend.setOnClickListener { validateData() }
+            profileTvLogout.setOnClickListener { userLogout() }
+            profileIvUser.setOnClickListener { imgeUser() }
+        }
         getProfileUser()
     }
 
@@ -76,10 +73,7 @@ class ProfileFragment : Fragment() {
                 }
             },
             urlImage = { url ->
-                Glide.with(requireContext())
-                    .load(url)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(binding.profileIvUser)
+                binding.profileIvUser.xLoadImg(url)
             }
         )
     }
@@ -99,11 +93,7 @@ class ProfileFragment : Fragment() {
             )
             viewModel.updateUser(sendModel, uriImage) {
                 if (it) {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.profile_data_updated,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    requireContext().xToast(getString(R.string.profile_data_updated))
                     parentFragmentManager.popBackStack()
                 }
             }

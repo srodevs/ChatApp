@@ -21,7 +21,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val query = firestore.collectionUser()
                 .whereGreaterThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername)
-                .whereLessThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername + '\uf8ff')
+                .whereLessThanOrEqualTo(
+                    FirestoreFirebaseService.DB_USERNAME,
+                    txtUsername + '\uf8ff'
+                )
 
             response(
                 FirestoreRecyclerOptions.Builder<UserModelResponse>()
@@ -32,9 +35,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getImg(s: String, function: (String) -> Unit) {
-        firestore.refImgProfileUser(s).downloadUrl.addOnCompleteListener { ref ->
-            if (ref.isSuccessful) {
-                function(ref.result.toString())
+        viewModelScope.launch {
+            firestore.refImgProfileUser(s).downloadUrl.addOnCompleteListener { ref ->
+                if (ref.isSuccessful) {
+                    function(ref.result.toString())
+                }
             }
         }
     }

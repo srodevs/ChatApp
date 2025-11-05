@@ -14,8 +14,6 @@ import com.azteca.chatapp.databinding.FragmentSearchBinding
 import com.azteca.chatapp.ui.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
-private const val TAG = "searchFragment"
-
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -34,6 +32,10 @@ class SearchFragment : Fragment() {
         }
     }
 
+    companion object {
+        private const val TAG = "searchFragment"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,8 +51,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.searchIvBack.setOnClickListener { parentFragmentManager.popBackStack() }
-        binding.searchSearchView.setOnQueryTextListener(searchUser)
+        with(binding) {
+            searchIvBack.setOnClickListener { parentFragmentManager.popBackStack() }
+            searchSearchView.setOnQueryTextListener(searchUser)
+        }
     }
 
     private fun searchQuery(txtUsername: String) {
@@ -64,8 +68,10 @@ class SearchFragment : Fragment() {
             adapter!!.startListening()
         }
 
-        binding.searchRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.searchRv.adapter = adapter
+        binding.searchRv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            this.adapter = adapter
+        }
     }
 
     private fun toChat(userModelResponse: UserModelResponse) {

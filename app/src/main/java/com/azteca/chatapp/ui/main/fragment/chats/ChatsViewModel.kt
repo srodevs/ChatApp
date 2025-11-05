@@ -43,19 +43,21 @@ class ChatsViewModel @Inject constructor(
         responseUser: (UserModelResponse?) -> Unit,
         responseImg: (String?) -> Unit,
     ) {
-        firestore.getOtherUserFromChatRoom(listUser, uuid).get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                val mUser = it.result.toObject(UserModelResponse::class.java)
-                responseUser(mUser)
+        viewModelScope.launch {
+            firestore.getOtherUserFromChatRoom(listUser, uuid).get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val mUser = it.result.toObject(UserModelResponse::class.java)
+                    responseUser(mUser)
 
-                firestore.refImgProfileUser(mUser?.userId.orEmpty()).downloadUrl
-                    .addOnCompleteListener { ref ->
-                        if (ref.isSuccessful) {
-                            responseImg(ref.result.toString())
+                    firestore.refImgProfileUser(mUser?.userId.orEmpty()).downloadUrl
+                        .addOnCompleteListener { ref ->
+                            if (ref.isSuccessful) {
+                                responseImg(ref.result.toString())
+                            }
                         }
-                    }
-            }
+                }
 
+            }
         }
     }
 }

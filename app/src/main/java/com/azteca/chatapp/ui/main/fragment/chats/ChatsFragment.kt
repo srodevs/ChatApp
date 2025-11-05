@@ -38,11 +38,9 @@ class ChatsFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.mainIvSearch.setOnClickListener {
-            findNavController().navigate(R.id.searchFragment)
-        }
-        binding.mainIvProfile.setOnClickListener {
-            findNavController().navigate(R.id.profileFragment)
+        with(binding) {
+            mainIvSearch.setOnClickListener { findNavController().navigate(R.id.searchFragment) }
+            mainIvProfile.setOnClickListener { findNavController().navigate(R.id.profileFragment) }
         }
     }
 
@@ -57,8 +55,10 @@ class ChatsFragment : Fragment() {
             adapter!!.startListening()
         }
 
-        binding.mainRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.mainRv.adapter = adapter
+        binding.mainRv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            this.adapter = adapter
+        }
     }
 
     private fun toChat(it: UserModelResponse) {
