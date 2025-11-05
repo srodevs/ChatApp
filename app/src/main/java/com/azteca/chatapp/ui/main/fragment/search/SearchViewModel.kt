@@ -2,8 +2,8 @@ package com.azteca.chatapp.ui.main.fragment.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.FirestoreFirebaseService
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.FirestoreFirebaseService
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.azteca.chatapp.common.SharedPrefs
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.FragmentSearchBinding
 import com.azteca.chatapp.ui.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint

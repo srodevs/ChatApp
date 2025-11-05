@@ -1,6 +1,7 @@
-package com.azteca.chatapp.data.model
+package com.azteca.chatapp.data.network.model
 
 import java.sql.Timestamp
+import java.util.Date
 
 data class ChatroomModel(
     var chatroomId: String,
@@ -13,7 +14,7 @@ data class ChatroomModel(
 data class ChatroomModelResponse(
     var chatroomId: String,
     var listUser: List<String>,
-    var timestamp: java.util.Date?,
+    var timestamp: Date?,
     var lastMsgSenderId: String,
     var lastMsg: String,
 ) {

@@ -10,9 +10,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.azteca.chatapp.common.SharedPrefs
-import com.azteca.chatapp.data.model.ChatMsgModel
-import com.azteca.chatapp.data.model.ChatroomModel
-import com.azteca.chatapp.data.model.ChatroomModelResponse
+import com.azteca.chatapp.data.network.model.ChatMsgModel
+import com.azteca.chatapp.data.network.model.ChatroomModel
+import com.azteca.chatapp.data.network.model.ChatroomModelResponse
 import com.azteca.chatapp.databinding.FragmentChatBinding
 import com.azteca.chatapp.ui.adapter.ChatAdapter
 import com.bumptech.glide.Glide

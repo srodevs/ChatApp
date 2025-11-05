@@ -4,7 +4,8 @@ import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.AuthFirebaseService
+import com.azteca.chatapp.domain.usecases.LoginPhoneUseCase
+import com.azteca.chatapp.domain.usecases.VerifyCodeUseCode
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -13,18 +14,16 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-private const val TAG = "loginViewModel"
-
 @HiltViewModel
 class Login2ViewModel @Inject constructor(
-    private val authFirebaseService: AuthFirebaseService
+    private val loginPhoneUseCase: LoginPhoneUseCase,
+    private val verifyCodeUseCode: VerifyCodeUseCode
 ) : ViewModel() {
 
     private var _loading = MutableStateFlow(false)
@@ -56,15 +55,20 @@ class Login2ViewModel @Inject constructor(
                     //     user action.
                     Log.d(TAG, "onVerificationCompleted:$p0")
                     viewModelScope.launch {
-                        /**------------------------------------*/
-                        /** le pasamos la lambda ya que no tiene que comprobar credenciales por ser numero de pueba*/
-                         onVerificationCodeComplete()
-                        /**------------------------------------*/
-                        /** le cuando se necesite completar el registro*/
-                        /*val res = authFirebaseService.completeRegisterCredential(p0)
+                        /** normal */
+                        /*
+                        val res = authFirebaseService.completeRegisterCredential(p0)
                         if (res != null) {
                             onVerificationCodeComplete()
-                        }*/
+                        }
+                        */
+
+                        /** - - - - - - - - - - - - - - - - - -  */
+                        /** proof - start  */
+                        /** le pasamos la lambda ya que no tiene que comprobar credenciales por ser numero de pueba*/
+                        onVerificationCodeComplete()
+                        /** proof - end  */
+                        /** - - - - - - - - - - - - - - - - - -  */
                     }
                 }
 
@@ -81,13 +85,13 @@ class Login2ViewModel @Inject constructor(
                         }
 
                         is FirebaseTooManyRequestsException -> {
-                            Log.w(TAG, "onVerificationFailed", p0)
                             // The SMS quota for the project has been exceeded
+                            Log.w(TAG, "onVerificationFailed", p0)
                         }
 
                         is FirebaseAuthMissingActivityForRecaptchaException -> {
-                            Log.w(TAG, "onVerificationFailed", p0)
                             // reCAPTCHA verification attempted with null Activity
+                            Log.w(TAG, "onVerificationFailed", p0)
                         }
                     }
                 }
@@ -106,21 +110,24 @@ class Login2ViewModel @Inject constructor(
                 }
             }
 
-            authFirebaseService.loginPhone(toString, activity, callback)
+            loginPhoneUseCase(toString, activity, callback)
 
             _loading.value = false
         }
     }
 
     fun verifyCode(code: String, function: () -> Unit) {
-        viewModelScope.launch {
-            val res = withContext(Dispatchers.IO) {
-                authFirebaseService.verifyCode(verCode, code)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = verifyCodeUseCode(verCode, code)
             if (res != null) {
-                function()
+                withContext(Dispatchers.Main) {
+                    function()
+                }
             }
         }
     }
 
+    companion object {
+        private const val TAG = "loginViewModel"
+    }
 }

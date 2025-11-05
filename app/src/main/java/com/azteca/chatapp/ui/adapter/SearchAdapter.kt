@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.azteca.chatapp.R
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.ItemUserBinding
 import com.azteca.chatapp.ui.main.fragment.search.SearchViewModel
 import com.bumptech.glide.Glide

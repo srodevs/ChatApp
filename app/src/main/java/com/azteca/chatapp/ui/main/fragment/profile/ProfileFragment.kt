@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.azteca.chatapp.R
 import com.azteca.chatapp.common.SharedPrefs
-import com.azteca.chatapp.data.model.UserModel
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.model.UserModel
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.FragmentProfileBinding
 import com.azteca.chatapp.ui.login.LoginActivity
 import com.azteca.chatapp.ui.main.MainActivity

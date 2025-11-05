@@ -3,9 +3,9 @@ package com.azteca.chatapp.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.azteca.chatapp.common.SharedPrefs
-import com.azteca.chatapp.data.AuthFirebaseService
-import com.azteca.chatapp.data.FirebaseMessageService
-import com.azteca.chatapp.data.FirestoreFirebaseService
+import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.network.FirebaseMessageService
+import com.azteca.chatapp.data.network.FirestoreFirebaseService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

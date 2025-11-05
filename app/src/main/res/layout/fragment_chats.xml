@@ -33,7 +33,7 @@
             android:layout_marginEnd="16dp"
             android:contentDescription="@string/all_descr_icon"
             android:padding="8dp"
-            android:src="@drawable/search"
+            android:src="@drawable/ic_search"
             app:layout_constraintBottom_toBottomOf="@id/mainIvProfile"
             app:layout_constraintEnd_toStartOf="@id/mainIvProfile"
             app:layout_constraintTop_toTopOf="@id/mainIvProfile" />
@@ -45,7 +45,7 @@
             android:layout_marginEnd="16dp"
             android:contentDescription="@string/all_descr_icon"
             android:padding="8dp"
-            android:src="@drawable/person_menu"
+            android:src="@drawable/ic_person_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

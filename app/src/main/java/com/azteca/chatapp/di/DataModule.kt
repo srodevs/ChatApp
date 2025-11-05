@@ -1,4 +1,4 @@
-package com.azteca.chatapp.data
+package com.azteca.chatapp.di
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore

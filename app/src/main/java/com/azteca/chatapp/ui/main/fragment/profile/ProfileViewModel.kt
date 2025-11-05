@@ -3,10 +3,10 @@ package com.azteca.chatapp.ui.main.fragment.profile
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.AuthFirebaseService
-import com.azteca.chatapp.data.FirestoreFirebaseService
-import com.azteca.chatapp.data.model.UserModel
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.network.FirestoreFirebaseService
+import com.azteca.chatapp.data.network.model.UserModel
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

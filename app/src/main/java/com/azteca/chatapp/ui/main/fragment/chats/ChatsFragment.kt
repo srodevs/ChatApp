@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.azteca.chatapp.R
 import com.azteca.chatapp.common.SharedPrefs
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.FragmentChatsBinding
 import com.azteca.chatapp.ui.adapter.HomeChatAdapter
 import dagger.hilt.android.AndroidEntryPoint

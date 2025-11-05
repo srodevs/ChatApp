@@ -1,4 +1,4 @@
-package com.azteca.chatapp.data
+package com.azteca.chatapp.data.network
 
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.suspendCancellableCoroutine

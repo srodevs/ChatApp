@@ -1,6 +1,6 @@
-package com.azteca.chatapp.data
+package com.azteca.chatapp.data.network
 
-import com.azteca.chatapp.data.model.UserModel
+import com.azteca.chatapp.data.network.model.UserModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,9 +39,6 @@ class FirestoreFirebaseService @Inject constructor(
             firestore.collection(COLLECT_USER).document(userId)
                 .set(userModel).addOnCompleteListener {
                     continuation.resume(it.isSuccessful)
-                }.addOnFailureListener {
-                    // modificar las reglas de firestore
-                    continuation.resumeWithException(it)
                 }
         }
     }
