@@ -14,14 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.azteca.chatapp.R
-import com.azteca.chatapp.data.model.UserModel
+import com.azteca.chatapp.data.network.model.UserModel
 import com.azteca.chatapp.databinding.FragmentLogin3Binding
 import com.azteca.chatapp.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.sql.Timestamp
-
-private const val TAG = "login3"
 
 @AndroidEntryPoint
 class Login3Fragment : Fragment() {
@@ -30,6 +28,10 @@ class Login3Fragment : Fragment() {
     private val viewModel: Login3ViewModel by viewModels()
     private val args: Login3FragmentArgs by navArgs()
     private lateinit var txtNumber: String
+
+    companion object {
+        private const val TAG = "login3"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,7 +1,6 @@
 package com.azteca.chatapp.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -41,7 +40,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initComponents() {
-        Log.d("mainActivity", "Create")
         viewModel.getFcm {
             txtFmcToken = it
         }

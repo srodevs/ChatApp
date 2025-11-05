@@ -2,8 +2,8 @@ package com.azteca.chatapp.ui.main.fragment.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.FirestoreFirebaseService
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.FirestoreFirebaseService
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,7 +21,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val query = firestore.collectionUser()
                 .whereGreaterThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername)
-                .whereLessThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername + '\uf8ff')
+                .whereLessThanOrEqualTo(
+                    FirestoreFirebaseService.DB_USERNAME,
+                    txtUsername + '\uf8ff'
+                )
 
             response(
                 FirestoreRecyclerOptions.Builder<UserModelResponse>()
@@ -32,9 +35,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getImg(s: String, function: (String) -> Unit) {
-        firestore.refImgProfileUser(s).downloadUrl.addOnCompleteListener { ref ->
-            if (ref.isSuccessful) {
-                function(ref.result.toString())
+        viewModelScope.launch {
+            firestore.refImgProfileUser(s).downloadUrl.addOnCompleteListener { ref ->
+                if (ref.isSuccessful) {
+                    function(ref.result.toString())
+                }
             }
         }
     }

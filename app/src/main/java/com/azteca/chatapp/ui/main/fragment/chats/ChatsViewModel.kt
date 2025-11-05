@@ -2,11 +2,11 @@ package com.azteca.chatapp.ui.main.fragment.chats
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.AuthFirebaseService
-import com.azteca.chatapp.data.FirestoreFirebaseService
-import com.azteca.chatapp.data.FirestoreFirebaseService.Companion.DB_TIMESTAMP
-import com.azteca.chatapp.data.model.ChatroomModelResponse
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.network.FirestoreFirebaseService
+import com.azteca.chatapp.data.network.FirestoreFirebaseService.Companion.DB_TIMESTAMP
+import com.azteca.chatapp.data.network.model.ChatroomModelResponse
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,19 +43,21 @@ class ChatsViewModel @Inject constructor(
         responseUser: (UserModelResponse?) -> Unit,
         responseImg: (String?) -> Unit,
     ) {
-        firestore.getOtherUserFromChatRoom(listUser, uuid).get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                val mUser = it.result.toObject(UserModelResponse::class.java)
-                responseUser(mUser)
+        viewModelScope.launch {
+            firestore.getOtherUserFromChatRoom(listUser, uuid).get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val mUser = it.result.toObject(UserModelResponse::class.java)
+                    responseUser(mUser)
 
-                firestore.refImgProfileUser(mUser?.userId.orEmpty()).downloadUrl
-                    .addOnCompleteListener { ref ->
-                        if (ref.isSuccessful) {
-                            responseImg(ref.result.toString())
+                    firestore.refImgProfileUser(mUser?.userId.orEmpty()).downloadUrl
+                        .addOnCompleteListener { ref ->
+                            if (ref.isSuccessful) {
+                                responseImg(ref.result.toString())
+                            }
                         }
-                    }
-            }
+                }
 
+            }
         }
     }
 }

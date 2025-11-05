@@ -26,6 +26,10 @@ class Login1Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initComponentUi()
+    }
+
+    private fun initComponentUi() {
         binding.loginCodeCountry.registerCarrierNumberEditText(binding.loginEtNumber)
         binding.loginBtnSend.setOnClickListener {
             if (!binding.loginCodeCountry.isValidFullNumber) {

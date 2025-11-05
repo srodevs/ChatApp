@@ -41,7 +41,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/primary" />
         <service
-            android:name=".data.FMCNotifyService"
+            android:name=".data.network.FMCNotifyService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

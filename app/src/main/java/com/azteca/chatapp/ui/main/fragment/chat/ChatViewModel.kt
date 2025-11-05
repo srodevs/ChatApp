@@ -2,12 +2,12 @@ package com.azteca.chatapp.ui.main.fragment.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.AuthFirebaseService
-import com.azteca.chatapp.data.FirestoreFirebaseService
-import com.azteca.chatapp.data.model.ChatMsgModel
-import com.azteca.chatapp.data.model.ChatMsgModelResponse
-import com.azteca.chatapp.data.model.ChatroomModel
-import com.azteca.chatapp.data.model.ChatroomModelResponse
+import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.network.FirestoreFirebaseService
+import com.azteca.chatapp.data.network.model.ChatMsgModel
+import com.azteca.chatapp.data.network.model.ChatMsgModelResponse
+import com.azteca.chatapp.data.network.model.ChatroomModel
+import com.azteca.chatapp.data.network.model.ChatroomModelResponse
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel

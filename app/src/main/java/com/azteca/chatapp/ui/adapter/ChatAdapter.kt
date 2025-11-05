@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.azteca.chatapp.R
-import com.azteca.chatapp.data.model.ChatMsgModelResponse
+import com.azteca.chatapp.data.network.model.ChatMsgModelResponse
 import com.azteca.chatapp.databinding.ItemUserMsgBinding
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions

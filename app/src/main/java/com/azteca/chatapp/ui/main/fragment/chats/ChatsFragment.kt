@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.azteca.chatapp.R
 import com.azteca.chatapp.common.SharedPrefs
-import com.azteca.chatapp.data.model.UserModelResponse
+import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.FragmentChatsBinding
 import com.azteca.chatapp.ui.adapter.HomeChatAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,11 +38,9 @@ class ChatsFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.mainIvSearch.setOnClickListener {
-            findNavController().navigate(R.id.searchFragment)
-        }
-        binding.mainIvProfile.setOnClickListener {
-            findNavController().navigate(R.id.profileFragment)
+        with(binding) {
+            mainIvSearch.setOnClickListener { findNavController().navigate(R.id.searchFragment) }
+            mainIvProfile.setOnClickListener { findNavController().navigate(R.id.profileFragment) }
         }
     }
 
@@ -57,8 +55,10 @@ class ChatsFragment : Fragment() {
             adapter!!.startListening()
         }
 
-        binding.mainRv.layoutManager = LinearLayoutManager(requireContext())
-        binding.mainRv.adapter = adapter
+        binding.mainRv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            this.adapter = adapter
+        }
     }
 
     private fun toChat(it: UserModelResponse) {

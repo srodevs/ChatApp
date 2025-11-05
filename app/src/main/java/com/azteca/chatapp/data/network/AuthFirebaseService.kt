@@ -1,4 +1,4 @@
-package com.azteca.chatapp.data
+package com.azteca.chatapp.data.network
 
 import android.app.Activity
 import com.google.firebase.auth.AuthCredential
@@ -17,10 +17,14 @@ class AuthFirebaseService @Inject constructor(
 ) {
 
     fun getCurrentUid(): String? {
-        /**registro original*/
-//        return firebaseAuth.uid
-        /**registro de prueba*/
+        /** - - - - - - - normal  - - - - - - - - */
+        // return firebaseAuth.uid
+
+        /** - - - - - - - - - - - - - - - - - -  */
+        /** proof - start  */
         return "cfvaEqtKwAY3XiAh4R0VO3m9MTH2"
+        /** proof - end  */
+        /** - - - - - - - - - - - - - - - - - - */
     }
 
     fun loginPhone(
@@ -28,8 +32,15 @@ class AuthFirebaseService @Inject constructor(
         activity: Activity,
         callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     ) {
-        //se debe de agregar el mismo numero de prueba en firebase console
-         firebaseAuth.firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber("+52 9999999922", "222222")
+        /** - - - - - - - - - - - - - - - - - -  */
+        /** proof - start  */
+        // se debe de agregar el mismo numero de prueba en firebase console
+        firebaseAuth.firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(
+            "+52 9999999922",
+            "222222"
+        )
+        /** proof - end  */
+        /** - - - - - - - - - - - - - - - - - - */
 
         val options = PhoneAuthOptions
             .newBuilder(firebaseAuth)
@@ -61,8 +72,9 @@ class AuthFirebaseService @Inject constructor(
     }
 
     fun logOut() {
+        /** - - - - - - - normal  - - - - - - - - */
         /**si es de pueba se comenta*/
-        //firebaseAuth.signOut()
+        // firebaseAuth.signOut()
     }
 
 }

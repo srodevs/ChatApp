@@ -6,9 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,11 +15,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.azteca.chatapp.R
+import com.azteca.chatapp.common.xToast
 import com.azteca.chatapp.databinding.FragmentLogin2Binding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Timer
-import java.util.TimerTask
 
 private const val TAG = "loginFragment2"
 
@@ -33,14 +31,19 @@ class Login2Fragment : Fragment() {
     private val viewModel: Login2ViewModel by viewModels()
     private val args: Login2FragmentArgs by navArgs()
     private lateinit var txtNumber: String
+    private var timerJob: Job? = null
     private var timerOut = 60L
-    private var timer: Timer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /** - - - - - - - normal  - - - - - - - - */
         /*txtNumber = args.number*/
-        /**prueba*/
+
+        /** - - - - - - - - - - - - - - - - - -  */
+        /** proof - start  */
         txtNumber = "+52 9999999922"
+        /** proof - end  */
+        /** - - - - - - - - - - - - - - - - - - */
     }
 
     override fun onCreateView(
@@ -56,8 +59,13 @@ class Login2Fragment : Fragment() {
 
 
         initComponents()
-        listeners()
+        initListeners()
         initVM()
+    }
+
+    private fun initComponents() {
+        startResendCodeTimer()
+        sendCode()
     }
 
     private fun initVM() {
@@ -70,12 +78,7 @@ class Login2Fragment : Fragment() {
         }
     }
 
-    private fun initComponents() {
-        startResendCodeTimer()
-        sendCode()
-    }
-
-    private fun listeners() {
+    private fun initListeners() {
         binding.loginBtnSend.setOnClickListener {
             if (binding.loginBtnSend.text?.length == 6) {
                 viewModel.verifyCode(binding.loginBtnSend.text.toString()) {
@@ -85,32 +88,23 @@ class Login2Fragment : Fragment() {
                 }
             }
         }
-        binding.loginTvResend.setOnClickListener {
-            sendCode()
-        }
+        binding.loginTvResend.setOnClickListener { sendCode() }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun startResendCodeTimer() {
-        timer = Timer()
-        if (timer != null) {
-            timer!!.schedule(object : TimerTask() {
-                @SuppressLint("SetTextI18n")
-                override fun run() {
-                    timerOut--
-                    requireActivity().runOnUiThread {
-                        binding.loginTvResend.isEnabled = false
-                        binding.loginTvResend.text =
-                            "${getText(R.string.login_resend_code)} $timerOut "
-                    }
-                    if (timerOut <= 0) {
-                        timerOut = 60L
-                        timer!!.cancel()
-                        requireActivity().runOnUiThread {
-                            binding.loginTvResend.isEnabled = true
-                        }
-                    }
-                }
-            }, 0, 1000)
+        timerJob?.cancel()
+        timerJob = lifecycleScope.launch {
+            binding.loginTvResend.isEnabled = false
+
+            for (time in timerOut downTo 0) {
+                binding.loginTvResend.text =
+                    "${getText(R.string.login_resend_code)} $time"
+                delay(1000)
+            }
+            timerOut = 60L
+            binding.loginTvResend.isEnabled = true
+            binding.loginTvResend.text = getText(R.string.login_resend_code)
         }
     }
 
@@ -119,36 +113,34 @@ class Login2Fragment : Fragment() {
             txtNumber,
             requireActivity(),
             onCodeSent = {
-                Log.e(TAG, "code sent")
-                Toast.makeText(requireContext(), "codigo enviado", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "code sent")
+                requireContext().xToast("codigo enviado")
 
-                /*binding.loginEtNumber.requestFocus()
+                /** - - - - - - - normal  - - - - - - - - */
+                /*
+                binding.loginEtNumber.requestFocus()
                 val imm =
                     requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.showSoftInput(binding.loginEtNumber, InputMethodManager.SHOW_IMPLICIT)*/
+                imm.showSoftInput(binding.loginEtNumber, InputMethodManager.SHOW_IMPLICIT)
+                */
             },
             onVerificationCodeComplete = {
                 //para pasar directo sin hacer click en comprobar code
-                Log.e(TAG, "code completeVerification")
-                Toast.makeText(requireContext(), "code sent y complete", Toast.LENGTH_LONG)
-                    .show()
+                Log.d(TAG, "code completeVerification")
+                requireContext().xToast("code sent y complete")
                 findNavController().navigate(
                     Login2FragmentDirections.actionLogin2FragmentToLogin3Fragment(txtNumber)
                 )
             },
             onVerificationFail = { fail ->
                 Log.e(TAG, "auth error $fail")
-                Toast.makeText(requireContext(), "auth error $fail", Toast.LENGTH_LONG)
-                    .show()
+                requireContext().xToast("auth error $fail")
             }
-
         )
     }
 
     override fun onStop() {
         super.onStop()
-        // Detener y limpiar el timer cuando el Fragmento se detiene
-        timer?.cancel()
-        timer = null
+        timerJob?.cancel()
     }
 }
