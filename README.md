@@ -35,25 +35,24 @@ El proyecto contiene:
     - ChatApp/app/google-services.json
 - Al codigo de telefono para auth 'opt', este codigo esta limitado por los servicion de google
     - Agregar telefono y codigo para pruebas, desde la consola en:
-        - Firebase Console ->  Authentication -> Metodos de acceso -> Números de teléfono para la
-          prueba (
+        - Firebase Console ->  Authentication -> Metodos de acceso -> Números de teléfono para la prueba (
           opcional)
 - Para realizar pruebas puedes hacer un 'hardcode' en los archivos
     - .../data/AuthFirebaseService.kt/
-        - ```fun loginPhone(){
+      ```fun loginPhone(){
         fun loginPhone(){
             //comentar o descomentar de acuerdo el uso
             firebaseAuth.firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber("+52 9999999922", "222222")
         }
     - .../ui/login/Login2Fragment
-        - ```fun onCreate(){
+      ```fun onCreate(){
          fun onCreate(){
             //debido a que el numero se obtiene de los args ponemos el mismo aqui para asegurar el codigo de validación
              txtNumber = args.number //numero intruducido
              txtNumber = "+52 9999999922" //numero existente de prueba
          }
     - .../ui/login/Login2ViewModel
-        - ```fun loginPhone(){ onVerificationCompleted(){......} }
+      ```fun loginPhone(){ onVerificationCompleted(){......} }
         fun loginPhone(){ 
             val callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential) {
@@ -63,7 +62,7 @@ El proyecto contiene:
             }...
         }
     - ../data/AuthFirebaseService.kt
-        - ```fun getCurrentUid()
+      ```fun getCurrentUid()
         fun getCurrentUid(){
             //debido a que validamos si existe un usuario ponemos el 'uuid' de los numero en la lista de Auth de firebase
              return firebaseAuth.uid //registro 
