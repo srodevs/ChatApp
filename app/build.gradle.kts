@@ -71,6 +71,9 @@ dependencies {
 
     // - - - - - Test - - - - -
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+    testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("org.robolectric:robolectric:4.14")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.navigation:navigation-testing:2.7.7")
