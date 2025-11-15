@@ -22,6 +22,9 @@ El proyecto contiene:
 - Firebase Storage
 - Dagger
 - ViewModel
+- Mock
+- Robolectric
+
 
 ---
 
