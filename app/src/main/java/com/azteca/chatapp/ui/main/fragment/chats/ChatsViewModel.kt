@@ -2,38 +2,26 @@ package com.azteca.chatapp.ui.main.fragment.chats
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.network.AuthFirebaseService
-import com.azteca.chatapp.data.network.FirestoreFirebaseService
-import com.azteca.chatapp.data.network.FirestoreFirebaseService.Companion.DB_TIMESTAMP
 import com.azteca.chatapp.data.network.model.ChatroomModelResponse
 import com.azteca.chatapp.data.network.model.UserModelResponse
+import com.azteca.chatapp.domain.usecases.chatroom.GetChatUseCase
+import com.azteca.chatapp.domain.usecases.chatroom.GetOtherUserFromChatRoomUseCase
+import com.azteca.chatapp.domain.usecases.user.GetImgUserCase
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatsViewModel @Inject constructor(
-    private val authFirebaseService: AuthFirebaseService,
-    private val firestore: FirestoreFirebaseService
+    private val getChats: GetChatUseCase,
+    private val getOtherUserFromChatRoom: GetOtherUserFromChatRoomUseCase,
+    private val getImgProfileUser: GetImgUserCase,
 ) : ViewModel() {
 
     fun getChats(opt: (FirestoreRecyclerOptions<ChatroomModelResponse>) -> Unit) {
         viewModelScope.launch {
-            val resUuid = authFirebaseService.getCurrentUid()
-            if (resUuid != null) {
-                val query = firestore.getChatroomCollections()
-                    .whereArrayContains(FirestoreFirebaseService.DB_LIST_USER, resUuid)
-                    .orderBy(DB_TIMESTAMP, Query.Direction.DESCENDING)
-
-                opt(
-                    FirestoreRecyclerOptions
-                        .Builder<ChatroomModelResponse>()
-                        .setQuery(query, ChatroomModelResponse::class.java)
-                        .build()
-                )
-            }
+            opt(getChats())
         }
     }
 
@@ -44,19 +32,10 @@ class ChatsViewModel @Inject constructor(
         responseImg: (String?) -> Unit,
     ) {
         viewModelScope.launch {
-            firestore.getOtherUserFromChatRoom(listUser, uuid).get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val mUser = it.result.toObject(UserModelResponse::class.java)
-                    responseUser(mUser)
-
-                    firestore.refImgProfileUser(mUser?.userId.orEmpty()).downloadUrl
-                        .addOnCompleteListener { ref ->
-                            if (ref.isSuccessful) {
-                                responseImg(ref.result.toString())
-                            }
-                        }
-                }
-
+            val result: UserModelResponse? = getOtherUserFromChatRoom.invoke(uuid, listUser)
+            responseUser(result)
+            if (result != null) {
+                responseImg(getImgProfileUser.invoke(result.userId.orEmpty()))
             }
         }
     }

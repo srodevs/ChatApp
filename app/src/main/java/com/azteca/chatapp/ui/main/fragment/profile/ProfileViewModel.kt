@@ -3,60 +3,43 @@ package com.azteca.chatapp.ui.main.fragment.profile
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.network.AuthFirebaseService
-import com.azteca.chatapp.data.network.FirestoreFirebaseService
-import com.azteca.chatapp.data.network.model.UserModel
 import com.azteca.chatapp.data.network.model.UserModelResponse
+import com.azteca.chatapp.domain.model.UserModel
+import com.azteca.chatapp.domain.usecases.auth.LogOutUseCase
+import com.azteca.chatapp.domain.usecases.user.GetImgUserCase
+import com.azteca.chatapp.domain.usecases.user.GetUserInfUseCase
+import com.azteca.chatapp.domain.usecases.user.UpdateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val firestore: FirestoreFirebaseService,
-    private val authFirebaseService: AuthFirebaseService
+    private val logOutUseCase: LogOutUseCase,
+    private val getUserUseCase: GetUserInfUseCase,
+    private val getImgProfileUseCase: GetImgUserCase,
+    private val updateUserUseCase: UpdateUserUseCase
 ) : ViewModel() {
 
     fun getUser(response: (UserModelResponse?) -> Unit, urlImage: (String) -> Unit) {
         viewModelScope.launch {
-            val resUuid = authFirebaseService.getCurrentUid()
-            if (resUuid != null) {
-                firestore.getInfUser(resUuid).get().addOnCompleteListener { res ->
-                    val userModel = res.result.toObject(UserModelResponse::class.java)
-                    response(userModel)
-                }
-                firestore.refImgProfileUser(resUuid).downloadUrl.addOnCompleteListener { res ->
-                    if (res.isSuccessful) {
-                        urlImage(res.result.toString())
-                    }
-                }
+            val userRes = getUserUseCase.invoke()
+            response(userRes)
+            if (userRes != null) {
+                urlImage(getImgProfileUseCase.invoke(userRes.userId.orEmpty()))
             }
         }
     }
 
     fun updateUser(sendModel: UserModel, uriImage: Uri?, resUpdate: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val resUuid = authFirebaseService.getCurrentUid()
-            if (resUuid != null) {
-                firestore.getInfUser(resUuid).set(sendModel).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        if (uriImage != null) {
-                            firestore.refImgProfileUser(resUuid).putFile(uriImage)
-                                .addOnCompleteListener { resImg ->
-                                    resUpdate(resImg.isSuccessful)
-                                }
-                        } else {
-                            resUpdate(true)
-                        }
-                    }
-                }
-            }
+            resUpdate(updateUserUseCase.invoke(sendModel, uriImage))
         }
     }
 
     fun logOut(response: () -> Unit) {
         viewModelScope.launch {
-            authFirebaseService.logOut()
+            logOutUseCase.invoke()
             response()
         }
     }

@@ -16,9 +16,9 @@ import com.azteca.chatapp.R
 import com.azteca.chatapp.common.SharedPrefs
 import com.azteca.chatapp.common.xLoadImg
 import com.azteca.chatapp.common.xToast
-import com.azteca.chatapp.data.network.model.UserModel
 import com.azteca.chatapp.data.network.model.UserModelResponse
 import com.azteca.chatapp.databinding.FragmentProfileBinding
+import com.azteca.chatapp.domain.model.UserModel
 import com.azteca.chatapp.ui.login.LoginActivity
 import com.azteca.chatapp.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint

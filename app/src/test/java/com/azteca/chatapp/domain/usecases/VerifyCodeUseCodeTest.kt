@@ -1,8 +1,8 @@
 package com.azteca.chatapp.domain.usecases
 
-import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.repository.AuthRepositoryImpl
+import com.azteca.chatapp.domain.usecases.auth.VerifyCodeUseCode
 import io.mockk.coVerify
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -10,7 +10,7 @@ import org.junit.Test
 
 
 class VerifyCodeUseCodeTest {
-    private val authFirebaseService: AuthFirebaseService = mockk(relaxed = true)
+    private val authFirebaseService: AuthRepositoryImpl = mockk(relaxed = true)
     private lateinit var verifyCodeUseCode: VerifyCodeUseCode
 
     @Before

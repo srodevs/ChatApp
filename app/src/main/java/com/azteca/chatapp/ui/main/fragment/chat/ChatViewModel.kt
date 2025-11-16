@@ -2,14 +2,18 @@ package com.azteca.chatapp.ui.main.fragment.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.network.AuthFirebaseService
-import com.azteca.chatapp.data.network.FirestoreFirebaseService
-import com.azteca.chatapp.data.network.model.ChatMsgModel
 import com.azteca.chatapp.data.network.model.ChatMsgModelResponse
-import com.azteca.chatapp.data.network.model.ChatroomModel
 import com.azteca.chatapp.data.network.model.ChatroomModelResponse
+import com.azteca.chatapp.domain.model.ChatMsgModel
+import com.azteca.chatapp.domain.model.ChatroomModel
+import com.azteca.chatapp.domain.usecases.auth.GetUuidUseCase
+import com.azteca.chatapp.domain.usecases.chatroom.GetChatRoomIdUseCase
+import com.azteca.chatapp.domain.usecases.chatroom.GetChatRoomMsgForAdapterUseCase
+import com.azteca.chatapp.domain.usecases.chatroom.GetChatRoomMsgUseCase
+import com.azteca.chatapp.domain.usecases.chatroom.GetChatRoomUseCase
+import com.azteca.chatapp.domain.usecases.chatroom.SetChatroomUseCase
+import com.azteca.chatapp.domain.usecases.user.GetImgUserCase
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.sql.Timestamp
@@ -17,8 +21,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val firestore: FirestoreFirebaseService,
-    private val authFirebaseService: AuthFirebaseService
+    private val getChatRoomIdUseCase: GetChatRoomIdUseCase,
+    private val getImgUserCase: GetImgUserCase,
+    private val getChatRoomUseCase: GetChatRoomUseCase,
+    private val getChatRoomMsgUseCase: GetChatRoomMsgUseCase,
+    private val getCurrentUserUuid: GetUuidUseCase,
+    private val setChatroomUse: SetChatroomUseCase,
+    private val getChatRoomMsfAdapter: GetChatRoomMsgForAdapterUseCase
 ) : ViewModel() {
 
     fun getChatRoomId(
@@ -27,17 +36,8 @@ class ChatViewModel @Inject constructor(
         responseImg: (String) -> Unit
     ) {
         viewModelScope.launch {
-            response(
-                firestore.getChatroomId(
-                    authFirebaseService.getCurrentUid().toString(), otherUserId
-                )
-            )
-
-            firestore.refImgProfileUser(otherUserId).downloadUrl.addOnCompleteListener { ref ->
-                if (ref.isSuccessful) {
-                    responseImg(ref.result.toString())
-                }
-            }
+            response(getChatRoomIdUseCase.invoke(otherUserId))
+            responseImg(getImgUserCase.invoke(otherUserId))
         }
     }
 
@@ -47,24 +47,19 @@ class ChatViewModel @Inject constructor(
         chatRoomRes: (ChatroomModelResponse?) -> Unit
     ) {
         viewModelScope.launch {
-
-            firestore.getChatroom(chatroomId).get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    if (it.result.exists()) {
-                        chatRoomRes(it.result.toObject(ChatroomModelResponse::class.java))
-                    } else {
-                        val chatSend = ChatroomModel(
-                            chatroomId,
-                            listOf(authFirebaseService.getCurrentUid().toString(), otherUserId),
-                            Timestamp(System.currentTimeMillis()),
-                            "",
-                            ""
-                        )
-                        setChatroom(chatroomId, chatSend, false)
-                    }
-                }
+            val res = getChatRoomUseCase.invoke(chatroomId, otherUserId)
+            if (res.first) {
+                chatRoomRes(res.second)
+            } else {
+                val chatSend = ChatroomModel(
+                    chatroomId,
+                    listOf(getCurrentUserUuid.invoke(), otherUserId),
+                    Timestamp(System.currentTimeMillis()),
+                    "",
+                    ""
+                )
+                setChatroom(chatroomId, chatSend, false)
             }
-
         }
     }
 
@@ -74,16 +69,16 @@ class ChatViewModel @Inject constructor(
                 val mChat = ChatroomModel(
                     chatroomId = chatroomId,
                     listUser = listOf(
-                        authFirebaseService.getCurrentUid().toString(),
+                        getCurrentUserUuid.invoke(),
                         chatSend.listUser[1]
                     ),
                     timestamp = Timestamp(System.currentTimeMillis()),
-                    lastMsgSenderId = authFirebaseService.getCurrentUid().toString(),
+                    lastMsgSenderId = getCurrentUserUuid.invoke(),
                     lastMsg = chatSend.lastMsg
                 )
-                firestore.getChatroom(chatroomId).set(mChat)
+                setChatroomUse.invoke(chatroomId, mChat)
             } else {
-                firestore.getChatroom(chatroomId).set(chatSend)
+                setChatroomUse.invoke(chatroomId, chatSend)
             }
         }
     }
@@ -94,10 +89,8 @@ class ChatViewModel @Inject constructor(
         response: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
-            chatMsgModel.senderId = authFirebaseService.getCurrentUid().toString()
-            firestore.getChatroomMsg(chatroomId).add(chatMsgModel).addOnCompleteListener {
-                response(it.isSuccessful)
-            }
+            chatMsgModel.senderId = getCurrentUserUuid.invoke()
+            response(getChatRoomMsgUseCase.invoke(chatroomId, chatMsgModel))
         }
     }
 
@@ -106,17 +99,7 @@ class ChatViewModel @Inject constructor(
         res: (FirestoreRecyclerOptions<ChatMsgModelResponse>) -> Unit
     ) {
         viewModelScope.launch {
-            val query = firestore.getChatroomMsg(chatroomId).orderBy(
-                FirestoreFirebaseService.DB_TIMESTAMP,
-                Query.Direction.DESCENDING
-            )
-
-            res(
-                FirestoreRecyclerOptions
-                    .Builder<ChatMsgModelResponse>()
-                    .setQuery(query, ChatMsgModelResponse::class.java)
-                    .build()
-            )
+            res(getChatRoomMsfAdapter.invoke(chatroomId))
         }
     }
 

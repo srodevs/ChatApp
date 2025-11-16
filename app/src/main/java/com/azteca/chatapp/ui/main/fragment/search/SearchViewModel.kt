@@ -2,8 +2,9 @@ package com.azteca.chatapp.ui.main.fragment.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.network.FirestoreFirebaseService
 import com.azteca.chatapp.data.network.model.UserModelResponse
+import com.azteca.chatapp.domain.usecases.user.GetImgUserCase
+import com.azteca.chatapp.domain.usecases.user.QuerySearchUseCase
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val firestore: FirestoreFirebaseService,
+    private val getImg: GetImgUserCase,
+    private val searchUser: QuerySearchUseCase
 ) : ViewModel() {
 
     fun querySearch(
@@ -19,28 +21,14 @@ class SearchViewModel @Inject constructor(
         response: (FirestoreRecyclerOptions<UserModelResponse>) -> Unit
     ) {
         viewModelScope.launch {
-            val query = firestore.collectionUser()
-                .whereGreaterThanOrEqualTo(FirestoreFirebaseService.DB_USERNAME, txtUsername)
-                .whereLessThanOrEqualTo(
-                    FirestoreFirebaseService.DB_USERNAME,
-                    txtUsername + '\uf8ff'
-                )
-
-            response(
-                FirestoreRecyclerOptions.Builder<UserModelResponse>()
-                    .setQuery(query, UserModelResponse::class.java)
-                    .build()
-            )
+            val res: FirestoreRecyclerOptions<UserModelResponse> = searchUser.invoke(txtUsername)
+            response(res)
         }
     }
 
     fun getImg(s: String, function: (String) -> Unit) {
         viewModelScope.launch {
-            firestore.refImgProfileUser(s).downloadUrl.addOnCompleteListener { ref ->
-                if (ref.isSuccessful) {
-                    function(ref.result.toString())
-                }
-            }
+            function(getImg.invoke(s))
         }
     }
 
