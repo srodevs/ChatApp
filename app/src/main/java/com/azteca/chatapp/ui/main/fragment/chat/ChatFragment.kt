@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.azteca.chatapp.common.SharedPrefs
 import com.azteca.chatapp.common.xLoadImg
-import com.azteca.chatapp.data.network.model.ChatMsgModel
-import com.azteca.chatapp.data.network.model.ChatroomModel
 import com.azteca.chatapp.data.network.model.ChatroomModelResponse
 import com.azteca.chatapp.databinding.FragmentChatBinding
+import com.azteca.chatapp.domain.model.ChatMsgModel
+import com.azteca.chatapp.domain.model.ChatroomModel
 import com.azteca.chatapp.ui.adapter.ChatAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp

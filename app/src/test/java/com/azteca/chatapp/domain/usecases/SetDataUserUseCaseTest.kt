@@ -1,22 +1,20 @@
 package com.azteca.chatapp.domain.usecases
 
-import com.azteca.chatapp.data.network.FirestoreFirebaseService
-import com.azteca.chatapp.data.network.model.UserModel
+import com.azteca.chatapp.data.repository.UserRepositoryImpl
+import com.azteca.chatapp.domain.model.UserModel
+import com.azteca.chatapp.domain.usecases.user.SetDataUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
-import org.bouncycastle.util.test.SimpleTest.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
-import java.sql.Timestamp
-import kotlin.String
 
 
 class SetDataUserUseCaseTest {
-    private val firestoreFirebaseService: FirestoreFirebaseService = mockk(relaxed = true)
+    private val firestoreFirebaseService: UserRepositoryImpl = mockk(relaxed = true)
     private lateinit var setDataUserUseCase: SetDataUserUseCase
 
     @Before
@@ -28,36 +26,56 @@ class SetDataUserUseCaseTest {
     fun `given uuid and user model, when set data, then return true`() = runTest {
         val uuid = "123"
         val userModel = getUserModel()
-        coEvery { firestoreFirebaseService.setInfUser(uuid, userModel) } returns true
+        coEvery { firestoreFirebaseService.updateUserInf(userModel, null) } returns true
 
-        val result = setDataUserUseCase.setData(uuid, userModel)
+        val result = setDataUserUseCase.setData(userModel)
 
         assertEquals(true, result)
-        coVerify(exactly = 1) { firestoreFirebaseService.setInfUser(uuid, userModel) }
+        coVerify(exactly = 1) { firestoreFirebaseService.updateUserInf(userModel, null) }
     }
 
     @Test
     fun `given uuid and user model, when set data, then return false`() = runTest {
         val uuid = "123"
         val userModel = getUserModel()
-        coEvery { firestoreFirebaseService.setInfUser(uuid, userModel) } returns false
+        coEvery {
+            firestoreFirebaseService.updateUserInf(
+                sendModel = userModel,
+                null
+            )
+        } returns false
 
-        val result = setDataUserUseCase.setData(uuid, userModel)
+        val result = setDataUserUseCase.setData(userModel)
 
         assertEquals(false, result)
-        coVerify(exactly = 1) { firestoreFirebaseService.setInfUser(uuid, userModel) }
+        coVerify(exactly = 1) {
+            firestoreFirebaseService.updateUserInf(
+                sendModel = userModel,
+                null
+            )
+        }
     }
 
     @Test
     fun `given uuid and user model, when set data, then return Exception`() = runTest {
         val uuid = "123"
         val userModel = getUserModel()
-        coEvery { firestoreFirebaseService.setInfUser(uuid, userModel) }  throws Exception("Firestore error")
+        coEvery {
+            firestoreFirebaseService.updateUserInf(
+                sendModel = userModel,
+                null
+            )
+        } throws Exception("Firestore error")
 
-        val result = setDataUserUseCase.setData(uuid, userModel)
+        val result = setDataUserUseCase.setData(userModel)
 
         assertFalse(result)
-        coVerify(exactly = 1) { firestoreFirebaseService.setInfUser(uuid, userModel) }
+        coVerify(exactly = 1) {
+            firestoreFirebaseService.updateUserInf(
+                sendModel = userModel,
+                null
+            )
+        }
     }
 
     private fun getUserModel(): UserModel {

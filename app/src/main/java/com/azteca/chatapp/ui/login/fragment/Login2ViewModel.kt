@@ -4,8 +4,8 @@ import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.domain.usecases.LoginPhoneUseCase
-import com.azteca.chatapp.domain.usecases.VerifyCodeUseCode
+import com.azteca.chatapp.domain.usecases.auth.LoginPhoneUseCase
+import com.azteca.chatapp.domain.usecases.auth.VerifyCodeUseCode
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

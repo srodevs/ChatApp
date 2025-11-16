@@ -1,6 +1,7 @@
 package com.azteca.chatapp.domain.usecases
 
-import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.repository.AuthRepositoryImpl
+import com.azteca.chatapp.domain.usecases.auth.GetUuidUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -9,7 +10,7 @@ import org.junit.Test
 
 
 class GetUuidUseCaseTest {
-    private val authFirebaseService: AuthFirebaseService = mockk(relaxed = true)
+    private val authFirebaseService: AuthRepositoryImpl = mockk(relaxed = true)
     private lateinit var getUuidUseCase: GetUuidUseCase
 
     @Before
@@ -19,22 +20,12 @@ class GetUuidUseCaseTest {
 
     @Test
     fun `when use case invoke, then return uuid`() {
-        coEvery { authFirebaseService.getCurrentUid() } returns "123"
+        coEvery { authFirebaseService.getUuid() } returns "123"
 
         val uuid = getUuidUseCase()
 
         assert(uuid?.isNotEmpty() == true)
-        coVerify(exactly = 1) { authFirebaseService.getCurrentUid() }
-    }
-
-    @Test
-    fun `when use case invoke, then return null`(){
-        coEvery { authFirebaseService.getCurrentUid() } returns null
-
-        val uuid = getUuidUseCase()
-
-        assert(uuid == null)
-        coVerify(exactly = 1) { authFirebaseService.getCurrentUid() }
+        coVerify(exactly = 1) { authFirebaseService.getUuid() }
     }
 
 }

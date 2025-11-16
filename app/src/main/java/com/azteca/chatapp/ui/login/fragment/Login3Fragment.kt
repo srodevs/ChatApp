@@ -14,8 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.azteca.chatapp.R
-import com.azteca.chatapp.data.network.model.UserModel
 import com.azteca.chatapp.databinding.FragmentLogin3Binding
+import com.azteca.chatapp.domain.model.UserModel
 import com.azteca.chatapp.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

@@ -1,6 +1,6 @@
-package com.azteca.chatapp.data.network
+package com.azteca.chatapp.data.network.service
 
-import com.azteca.chatapp.data.network.model.UserModel
+import com.azteca.chatapp.domain.model.UserModel
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -8,7 +8,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class FirestoreFirebaseService @Inject constructor(

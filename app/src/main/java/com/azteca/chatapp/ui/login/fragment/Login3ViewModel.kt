@@ -1,14 +1,14 @@
 package com.azteca.chatapp.ui.login.fragment
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.azteca.chatapp.data.network.model.UserModel
-import com.azteca.chatapp.domain.usecases.GetUuidUseCase
-import com.azteca.chatapp.domain.usecases.SetDataUserUseCase
+import com.azteca.chatapp.domain.model.UserModel
+import com.azteca.chatapp.domain.usecases.auth.GetUuidUseCase
+import com.azteca.chatapp.domain.usecases.user.SetDataUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,18 +19,15 @@ class Login3ViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     fun validateInfUser(userModel: UserModel, res: (Boolean) -> Unit) {
         viewModelScope.launch {
             _loading.value = true
-
             val uuid = getUuidUseCase()
-            Log.d(TAG, "current uuid -> $uuid")
             if (uuid != null) {
                 userModel.apply { userId = uuid }
-                val response = setDataUserUseCase.setData(uuid, userModel)
-                Log.d(TAG, " set inf user -> $response")
+                val response = setDataUserUseCase.setData(userModel)
                 res(response)
             }
             _loading.value = false

@@ -1,7 +1,8 @@
 package com.azteca.chatapp.domain.usecases
 
 import android.app.Activity
-import com.azteca.chatapp.data.network.AuthFirebaseService
+import com.azteca.chatapp.data.repository.AuthRepositoryImpl
+import com.azteca.chatapp.domain.usecases.auth.LoginPhoneUseCase
 import com.google.firebase.auth.PhoneAuthProvider
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -13,7 +14,7 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class LoginPhoneUseCaseTest {
-    private val authFirebaseService: AuthFirebaseService = mockk(relaxed = true)
+    private val authFirebaseService: AuthRepositoryImpl = mockk(relaxed = true)
     private lateinit var useCase: LoginPhoneUseCase
 
     @Before

@@ -1,4 +1,4 @@
-package com.azteca.chatapp.data.network
+package com.azteca.chatapp.data.network.service
 
 import android.app.Activity
 import com.google.firebase.auth.AuthCredential
