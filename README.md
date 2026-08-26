@@ -98,7 +98,10 @@ fun loginPhone() {
 ```
 </details>
 ---
-
+ 
+## 📄 Licencia
+ 
+Distribuido bajo licencia MIT. Ver [`LICENSE`](LICENSE) para más detalles.
  
 
 
