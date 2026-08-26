@@ -1,76 +1,91 @@
-# Aplicación de Chat
+# 💬 ChatApp
 
-- Ejemplo practico de una aplicacón de chat
+- Aplicación de chat para Android con autenticación por número de teléfono, mensajería
+en tiempo real y envío de archivos, construida sobre Firebase con arquitectura MVVM.
 
 <p align="center">
-<img src="/previews/screenshot_chatapp.jpg" style="height: 75%; width:75%;" alt=""/>
+<img src="previews/screenshot_chatapp.jpg" style="height: 75%; width:75%;" alt=""/>
 </p>
 
 ---
 
-## Tegnologias utilizadas
-
-El proyecto contiene:
-
-- SplashScreen (androidx)
-- Arquitectura MVVM
-- CleanCode
-- Fragments
-- Navigation Component
-- FirebaseAuth(phone)
-- Firebase Firestore
-- Firebase Storage
-- Dagger
-- ViewModel
-- Mock
-- Robolectric
-
+## ✨ Características
+ 
+- 📱 **Autenticación por SMS** con Firebase Auth (verificación OTP por número de teléfono)
+- 💬 **Mensajería en tiempo real** con Cloud Firestore
+- 📎 **Envío de archivos e imágenes** con Firebase Storage
+- 🧭 **Navegación de una sola Activity** con Navigation Component
+- 🎨 **Splash Screen** con la API oficial de AndroidX
 
 ---
 
-## Uso
+## ⚙️ Tecnologías
+ 
+| Categoría | Tecnologías |
+|---|---|
+| Lenguaje | Kotlin |
+| UI | Fragments · Navigation Component · SplashScreen API |
+| Arquitectura | MVVM · ViewModel · Clean Code |
+| Backend | Firebase Auth (phone) · Cloud Firestore · Firebase Storage |
+| Inyección de dependencias | Dagger |
+| Testing | JUnit · Mockito · Robolectric |
+| CI | GitHub Actions |
 
-- Clona el repo
-    - ```git clone https://github.com/srodevs/ChatApp```
-- Sincroniza 'ChatApp' a un proyecto en 'Firebase Console'
-- Habilita  'Authentication(phone)', 'Cloud Firestore', 'Storage' en la consola de Firebase
-- Asegurate de tener el archivo 'google-services.json' en (Android vista project):
-    - ChatApp/app/google-services.json
-- Al codigo de telefono para auth 'opt', este codigo esta limitado por los servicion de google
-    - Agregar telefono y codigo para pruebas, desde la consola en:
-        - Firebase Console ->  Authentication -> Metodos de acceso -> Números de teléfono para la prueba (
-          opcional)
-- Para realizar pruebas puedes hacer un 'hardcode' en los archivos
-    - .../data/AuthFirebaseService.kt/
-      ```fun loginPhone(){
-        fun loginPhone(){
-            //comentar o descomentar de acuerdo el uso
-            firebaseAuth.firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber("+52 9999999922", "222222")
-        }
-    - .../ui/login/Login2Fragment
-      ```fun onCreate(){
-         fun onCreate(){
-            //debido a que el numero se obtiene de los args ponemos el mismo aqui para asegurar el codigo de validación
-             txtNumber = args.number //numero intruducido
-             txtNumber = "+52 9999999922" //numero existente de prueba
-         }
-    - .../ui/login/Login2ViewModel
-      ```fun loginPhone(){ onVerificationCompleted(){......} }
-        fun loginPhone(){ 
-            val callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                override fun onVerificationCompleted(p0: PhoneAuthCredential) {
-                    //en el callback descomentamos de acuerdo al caso
-                    onVerificationCodeComplete()//de prueba para hacer la validacion
-                    val res = authFirebaseService.completeRegisterCredential(p0)....// para comprobar codigos enviado y recibido
-            }...
-        }
-    - ../data/AuthFirebaseService.kt
-      ```fun getCurrentUid()
-        fun getCurrentUid(){
-            //debido a que validamos si existe un usuario ponemos el 'uuid' de los numero en la lista de Auth de firebase
-             return firebaseAuth.uid //registro 
-             return "cfv..." //registro existente de prueba
-        }
 
 ---
-  
+## 🚀 Instalación
+ 
+**Requisitos:** Android Studio (Ladybug o superior), JDK 17, una cuenta de Firebase.
+ 
+1. Clona el repositorio:
+```bash
+   git clone https://github.com/srodevs/ChatApp.git
+```
+ 
+2. Crea un proyecto en [Firebase Console](https://console.firebase.google.com) y
+   registra la app con el `applicationId` del proyecto.
+3. Habilita en la consola:
+   - **Authentication** → método *Teléfono*
+   - **Cloud Firestore**
+   - **Storage**
+4. Descarga `google-services.json` y colócalo en:
+```
+   ChatApp/app/google-services.json
+```
+
+5. Sincroniza Gradle y ejecuta.
+---
+ 
+## 🧪 Probar sin consumir SMS reales
+ 
+Firebase limita la cantidad de SMS de verificación por día. Para desarrollar sin
+gastar esa cuota, usa los **números de prueba** que ofrece la propia consola:
+ 
+> Firebase Console → Authentication → Sign-in method → Phone → *Números de teléfono
+> para la prueba*
+ 
+Agrega un número ficticio (ej. `+52 9999999922`) con un código fijo (ej. `222222`).
+Con eso el flujo completo funciona sin enviar un SMS real.
+ 
+<details>
+<summary>Atajos adicionales para depurar el flujo de verificación</summary>
+Si necesitas saltarte la entrada manual del código durante el desarrollo, el proyecto
+permite forzar la auto-recuperación del OTP en `data/AuthFirebaseService.kt`:
+ 
+```kotlin
+fun loginPhone() {
+    // Solo para desarrollo: fuerza el código del número de prueba
+    firebaseAuth.firebaseAuthSettings
+        .setAutoRetrievedSmsCodeForPhoneNumber("+52 9999999922", "222222")
+}
+```
+</details>
+---
+ 
+## 📄 Licencia
+ 
+Distribuido bajo licencia MIT. Ver [`LICENSE`](LICENSE) para más detalles.
+ 
+
+
+
