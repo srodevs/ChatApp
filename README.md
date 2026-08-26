@@ -17,23 +17,6 @@ en tiempo real y envío de archivos, construida sobre Firebase con arquitectura 
 - 🧭 **Navegación de una sola Activity** con Navigation Component
 - 🎨 **Splash Screen** con la API oficial de AndroidX
 
-
----
- 
-## 🏗️ Arquitectura
- 
-El proyecto sigue **MVVM** con separación por capas:
- 
-```
-app/src/main/java/
-├── data/          # Servicios de Firebase (Auth, Firestore, Storage) y repositorios
-├── di/            # Módulos de Dagger
-├── ui/
-│   ├── login/     # Flujo de autenticación por teléfono (Fragment + ViewModel)
-│   └── chat/      # Listado y detalle de conversaciones
-└── common/
-```
-
 ---
 
 ## ⚙️ Tecnologías
